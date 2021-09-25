@@ -13,7 +13,7 @@ def main():
     pass
 
 
-def check_measure() -> array[int]:
+def check_measure() -> list[int]:
     """Checks if there need to be taken any measurements.
     :returns: columns to be measured
     """
@@ -49,6 +49,60 @@ def measure(column: int, start_point: int):
                 board[piece1[0], piece1[1]] = 0
                 board[piece2[0], piece2[1]] = val
             quantum_list.remove(val)
+
+
+def check_move(column: int) -> bool:
+    """Checks if a move in a certain column is possible.
+    :column: the column to check
+    :returns: boolean whether the move is possible
+    """
+    if board[0, column] == 0:
+        return True
+    else:
+        return False
+
+
+def create_quantum_piece(column) -> bool:
+    """Quantum piece is created, updates the board after the move.
+    :column: column to place the quantum piece in
+    :returns: whether the move was possible
+    """
+    a = check_move(column)
+    if a == True:
+        board[0, column] = draw_counter
+        measure(column)
+        gravity_column(column)
+    else:
+        print("select another column")  # TODO: game logic
+    if a:
+        quantum_list.append(draw_counter)
+    return a
+
+
+def create_piece(column) -> bool:
+    """Classical piece is created, gets 1 column as input, updates the board after the move and returns a = True if the move is possible, otherwise the player has to select another column
+    :column: column to place the classical piece in
+    :returns: whether the move was possible
+    """
+    a = check_move(column)
+    if a == True:
+        board[0, column] = draw_counter
+        measure(column)
+        gravity_column(column)
+    else:
+        print("select another column")  # TODO: game logic
+    return a
+
+
+def gravity_column(column: int):
+    """Puts gravity to the board.
+    :column: the column to let gravity act on
+    """
+    a = board[:, column]
+    a = a[a != 0]
+    while len(a) <= height - 1:
+        a = np.append(np.array([0]), a)
+    board[:, column] = a
 
 
 width, height = 7, 6
