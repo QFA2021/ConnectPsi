@@ -14,10 +14,11 @@ def main():
 
 
 if __name__ == main():
-    width, height = 7, 6
-    player_nr = 2
-    draw_counter = 0
-    board = np.ndarray((height, width))
-    quantum_list = []
-
     main()
+
+
+width, height = 7, 6
+player_nr = 2
+draw_counter = 0
+board = np.zeros((height, width))
+quantum_list = []
