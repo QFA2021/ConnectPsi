@@ -1,4 +1,4 @@
-# ConnectPsi
+![ConnectPsi](https://i.imgur.com/LIXlSg5.png)
 
 Connect Four, but quantum and bigger.
 
