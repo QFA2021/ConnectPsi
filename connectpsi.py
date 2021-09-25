@@ -27,7 +27,9 @@ def check_measure() -> list[int]:
                     quantum_pos = pos - 1 - pos
                 else:
                     classical_pos = pos - 1 - pos
-        if (quantum_pos != -1 and classical_pos != -1 and classical_pos < quantum_pos) or quantum_pos == 0:
+        if (
+            quantum_pos != -1 and classical_pos != -1 and classical_pos < quantum_pos
+        ) or quantum_pos == 0:
             return_list.append(col_nr)
     return return_list
 
@@ -105,23 +107,14 @@ def gravity_column(column: int):
     board[:, column] = a
 
 
-width, height = 7, 6
-player_nr = 2
-draw_counter = 0
-board = np.zeros((height, width), dtype="int16")
-quantum_list = []
-psi = 4                            #number of connected pieces to win
-
-if __name__ == main():
-    main()
-
-
 def check_win() -> int:
-    ''' Checks whether the game is over
-    :returns: int>0: player who won, -2: tie, -1: nobody has won, yet'''
-
+    """Checks whether the game is over
+    :returns: int>0: player who won, -2: tie, -1: nobody has won, yet
+    """
     winner = -2
-    winturn = 2 * width * height  # a number sufficiently big, that the real winturn is smaller for sure
+    winturn = (
+        2 * width * height
+    )  # a number sufficiently big, that the real winturn is smaller for sure
     tempwinturn = -1
     player = -1
     counter = 0
@@ -131,7 +124,9 @@ def check_win() -> int:
         for column in range(width):
             field = board[row][column]
 
-            winner, winturn, tempwinturn, player, counter = check_field(winner, winturn, tempwinturn, player, counter, field)
+            winner, winturn, tempwinturn, player, counter = check_field(
+                winner, winturn, tempwinturn, player, counter, field
+            )
         counter = 0
         tempwinturn = -1
 
@@ -140,38 +135,20 @@ def check_win() -> int:
         for row in range(height):
             field = board[row][column]
 
-            winner, winturn, tempwinturn, player, counter = check_field(winner, winturn, tempwinturn, player, counter, field)
+            winner, winturn, tempwinturn, player, counter = check_field(
+                winner, winturn, tempwinturn, player, counter, field
+            )
         counter = 0
         tempwinturn = -1
 
     # check diagonals top to bottom
-    for column in range(0,width-psi):
+    for column in range(0, width - psi):
         x = 0
-        while ((column + x) < width and x < height):
-            field = board[x][column +x]
-            winner, winturn, tempwinturn, player, counter = check_field(winner, winturn, tempwinturn, player, counter, field)
-            x+=1
-
-        counter = 0
-        tempwinturn = -1
-
-    for row in range(1, height-psi):
-        x = 0
-        while((row + x) < height and x < width):
-            field = board[row + x][x]
-            winner, winturn, tempwinturn, player, counter = check_field(winner, winturn, tempwinturn, player, counter, field)
-            x += 1
-
-        counter = 0
-        tempwinturn = -1
-
-    # check diagonals bottom to top
-    for column in range(0, width-psi):
-        x = 0
-        while ((column + x) < width and x < height):
-            field = board[height - 1 - x][column + x]
-            winner, winturn, tempwinturn, player, counter = check_field(winner, winturn, tempwinturn, player, counter,
-                                                                        field)
+        while (column + x) < width and x < height:
+            field = board[x][column + x]
+            winner, winturn, tempwinturn, player, counter = check_field(
+                winner, winturn, tempwinturn, player, counter, field
+            )
             x += 1
 
         counter = 0
@@ -179,40 +156,67 @@ def check_win() -> int:
 
     for row in range(1, height - psi):
         x = 0
-        while ((row + x) < height and x < width):
-            field = board[height - 1 - x - row][x]
-            winner, winturn, tempwinturn, player, counter = check_field(winner, winturn, tempwinturn, player, counter,
-                                                                        field)
+        while (row + x) < height and x < width:
+            field = board[row + x][x]
+            winner, winturn, tempwinturn, player, counter = check_field(
+                winner, winturn, tempwinturn, player, counter, field
+            )
             x += 1
 
         counter = 0
         tempwinturn = -1
 
-    if (not 0 in board and winner == -2):
+    # check diagonals bottom to top
+    for column in range(0, width - psi):
+        x = 0
+        while (column + x) < width and x < height:
+            field = board[height - 1 - x][column + x]
+            winner, winturn, tempwinturn, player, counter = check_field(
+                winner, winturn, tempwinturn, player, counter, field
+            )
+            x += 1
+
+        counter = 0
+        tempwinturn = -1
+
+    for row in range(1, height - psi):
+        x = 0
+        while (row + x) < height and x < width:
+            field = board[height - 1 - x - row][x]
+            winner, winturn, tempwinturn, player, counter = check_field(
+                winner, winturn, tempwinturn, player, counter, field
+            )
+            x += 1
+
+        counter = 0
+        tempwinturn = -1
+
+    if not 0 in board and winner == -2:
         return -2
 
     return winner + 1
 
 
-def check_field(winner: int, winturn:int, tempwinturn:int, player:int, counter:int, field:int) -> tuple[int, int, int, int, int]:
-    '''Checks field for relevant changes for the check_win method.
+def check_field(
+    winner: int, winturn: int, tempwinturn: int, player: int, counter: int, field: int
+) -> tuple[int, int, int, int, int]:
+    """Checks field for relevant changes for the check_win method.
     :winner: current winner
     :winturn: current minimal number of turns to win
     :tempwinturn: temporary winturn number
     :player: owner of the previously checked piece
     :counter: counts the connected pieces
     :field: current place on the board
-    :returns: new winner, winturn, tempwinturn, player and counter'''
-
-
-    if (field != 0 and field not in quantum_list):  # If  a classical piece lies there
+    :returns: new winner, winturn, tempwinturn, player and counter
+    """
+    if field != 0 and field not in quantum_list:  # If  a classical piece lies there
         new_player = field % player_nr
-        if (player == new_player):
+        if player == new_player:
             counter += 1
-            if (field > tempwinturn):
+            if field > tempwinturn:
                 tempwinturn = field
 
-            if (counter == psi and tempwinturn < winturn):  # If we have a new winner
+            if counter == psi and tempwinturn < winturn:  # If we have a new winner
                 winturn = tempwinturn
                 winner = player
 
@@ -226,3 +230,14 @@ def check_field(winner: int, winturn:int, tempwinturn:int, player:int, counter:i
         tempwinturn = -1
 
     return winner, winturn, tempwinturn, player, counter
+
+
+width, height = 7, 6
+player_nr = 2
+draw_counter = 0
+board = np.zeros((height, width), dtype="int16")
+quantum_list = []
+psi = 4  # number of connected pieces to win
+
+if __name__ == main():
+    main()
