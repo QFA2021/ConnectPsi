@@ -13,12 +13,11 @@ def main():
     pass
 
 
-if __name__ == main():
-    main()
-
-
 width, height = 7, 6
 player_nr = 2
 draw_counter = 0
 board = np.zeros((height, width))
 quantum_list = []
+
+if __name__ == main():
+    main()
