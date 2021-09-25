@@ -25,7 +25,7 @@ if __name__ == main():
 
 
 def check_win() -> int:
-    winner = -1
+    winner = -2
     winturn = 2 * width * height  # a number sufficiently big, that the real winturn is smaller for sure
     tempwinturn = -1
     player = -1
@@ -95,7 +95,7 @@ def check_win() -> int:
 
 
 
-    return winner
+    return winner + 1
 
 
 def check_field(winner: int, winturn:int, tempwinturn:int, player:int, counter:int, field:int)->(int, int, int, int, int):
