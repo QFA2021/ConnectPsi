@@ -18,4 +18,8 @@ if __name__ == main():
     player_nr = 2
     board = np.ndarray((height, width))
     quantum_list = []
+    draw_counter = 0
+    board = np.ndarray((height, width))
+    quantum_list = []
+
     main()
