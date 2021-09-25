@@ -54,7 +54,7 @@ def measure(column: int, start_point: int):
 def check_move(column: int) -> bool:
     """Checks if a move in a certain column is possible.
     :column: the column to check
-    :return: boolean whether the move is possible
+    :returns: boolean whether the move is possible
     """
     if board[0, column] == 0:
         return True
@@ -62,39 +62,36 @@ def check_move(column: int) -> bool:
         return False
 
 
-def create_quantum_piece(column1: int, column2: int) -> tuple[bool, bool]:
-    """Quantum piece is created, gets 2 columns as input, updates the board after the move and returns a, b = True, True if the move is possible, otherwise the player has to select another column.
-    :column1/2: columns to place the quantum pieces in
-    :return: whether both moves were possible
+def create_quantum_piece(column) -> bool:
+    """Quantum piece is created, updates the board after the move.
+    :column: column to place the quantum piece in
+    :returns: whether the move was possible
     """
-    a = check_move(column1)
+    a = check_move(column)
     if a == True:
-        board[0, column1] = draw_counter
-        gravity_column(column1)
+        board[0, column] = draw_counter
+        measure(column)
+        gravity_column(column)
     else:
         print("select another column")  # TODO: game logic
-    b = check_move(column2)
-    if b == True:
-        board[0, column2] = draw_counter
-        gravity_column(column2)
-    else:
-        print("select another column")  # TODO: game logic
-    if a == True and b == True:
-        quantum_list = quantum_list + [draw_counter]
-    return (a, b)
+    if a:
+        quantum_list.append(draw_counter)
+    return a
 
 
 def create_piece(column) -> bool:
     """Classical piece is created, gets 1 column as input, updates the board after the move and returns a = True if the move is possible, otherwise the player has to select another column
     :column: column to place the classical piece in
-    :return: whether the move was possible
+    :returns: whether the move was possible
     """
     a = check_move(column)
     if a == True:
         board[0, column] = draw_counter
+        measure(column)
         gravity_column(column)
     else:
         print("select another column")  # TODO: game logic
+    return a
 
 
 def gravity_column(column: int):
@@ -105,8 +102,6 @@ def gravity_column(column: int):
     a = a[a != 0]
     while len(a) <= height - 1:
         a = np.append(np.array([0]), a)
-        if len(a) == height:
-            break
     board[:, column] = a
 
 
