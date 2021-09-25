@@ -18,35 +18,36 @@ def check_measure() -> array[int]:
     :returns: columns to be measured
     """
     return_list = []  # list of columns to be measured
-    for column in board.T:
+    for col_nr, column in enumerate(board.T):
         quantum_pos = -1  # position of highest quantum piece
         classical_pos = -1  # position of highest classical piece
-        for pos, val in enumerate(column):
+        for pos, val in enumerate(column[::-1]):
             if val != 0:
                 if val in quantum_list:
-                    quantum_pos = pos
+                    quantum_pos = pos - 1 - pos
                 else:
-                    classical_pos = pos
-        if quantum_pos != -1 and classical_pos != -1 and classical_pos > quantum_pos:
-            return_list.append(column)
+                    classical_pos = pos - 1 - pos
+        if quantum_pos != -1 and classical_pos != -1 and classical_pos < quantum_pos:
+            return_list.append(col_nr)
     return return_list
 
 
-def measure(column: int):
+def measure(column: int, start_point: int):
     """Measures the given column, collapsing quantum super positions.
     :column: the column to measure
+    :start_point: row at which the measurement should be started
     """
-    to_measure = board[:, column]
-    for pos, val in to_measure:
+    to_measure = board[start_point:, column]
+    for pos, val in enumerate(to_measure):
         if val in quantum_list:
-            (piece1, piece2) = np.where(board == val)
+            (piece1, piece2) = np.argwhere(board == val)
             rand = bool(random.getrandbits(1))
             if rand:
-                board[piece1] = val
-                board[piece2] = 0
+                board[piece1[0], piece1[1]] = val
+                board[piece2[0], piece2[1]] = 0
             else:
-                board[piece2] = val
-                board[piece1] = 0
+                board[piece1[0], piece1[1]] = 0
+                board[piece2[0], piece2[1]] = val
             quantum_list.remove(val)
 
 
