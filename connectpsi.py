@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
+import random
+
 import numpy as np
 import pyglet as pg
-import random
 
 
 def main():
@@ -15,7 +16,7 @@ def main():
 
 def check_measure() -> list[int]:
     """Checks if there need to be taken any measurements.
-    :returns: columns to be measured
+    :returns: columns to be measured and point to start measurement
     """
     return_list = []  # list of columns to be measured
     for col_nr, column in enumerate(board.T):
@@ -30,7 +31,7 @@ def check_measure() -> list[int]:
         if (
             quantum_pos != -1 and classical_pos != -1 and classical_pos < quantum_pos
         ) or quantum_pos == 0:
-            return_list.append(col_nr)
+            return_list.append((col_nr, quantum_pos))
     return return_list
 
 
@@ -40,16 +41,15 @@ def measure(column: int, start_point: int):
     :start_point: row at which the measurement should be started
     """
     to_measure = board[start_point:, column]
-    for pos, val in enumerate(to_measure):
+    for val in to_measure:
         if val in quantum_list:
-            (piece1, piece2) = np.argwhere(board == val)
-            rand = bool(random.getrandbits(1))
-            if rand:
-                board[piece1[0], piece1[1]] = val
-                board[piece2[0], piece2[1]] = 0
-            else:
-                board[piece1[0], piece1[1]] = 0
-                board[piece2[0], piece2[1]] = val
+            pieces = np.argwhere(board == val)
+            rand = random.randint(0, len(pieces) - 1)
+            board[pieces[rand, 0], pieces[rand, 1]] = val
+            for i in range(len(pieces)):
+                if i == rand:
+                    continue
+                board[pieces[i, 0], pieces[i, 1]] = 0
             quantum_list.remove(val)
 
 
@@ -72,7 +72,8 @@ def create_quantum_piece(column) -> bool:
     a = check_move(column)
     if a == True:
         board[0, column] = draw_counter
-        measure(column)
+        if board[1, column] != 0:
+            measure(column, 0)
         gravity_column(column)
     else:
         print("select another column")  # TODO: game logic
@@ -89,7 +90,7 @@ def create_piece(column) -> bool:
     a = check_move(column)
     if a == True:
         board[0, column] = draw_counter
-        measure(column)
+        measure(column, 0)
         gravity_column(column)
     else:
         print("select another column")  # TODO: game logic
