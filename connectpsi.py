@@ -25,6 +25,7 @@ if __name__ == main():
 
 
 def check_win() -> int:
+
     winner = -2
     winturn = 2 * width * height  # a number sufficiently big, that the real winturn is smaller for sure
     tempwinturn = -1
@@ -93,7 +94,8 @@ def check_win() -> int:
         counter = 0
         tempwinturn = -1
 
-
+    if (not 0 in board and winner == -2):
+        return -2
 
     return winner + 1
 
