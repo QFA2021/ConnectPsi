@@ -4,5 +4,5 @@
 
 - Frontend
 - Backend
- - Game logic
- - Win check
+    - Game logic
+    - Win check
