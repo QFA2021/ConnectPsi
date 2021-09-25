@@ -27,7 +27,7 @@ def check_measure() -> array[int]:
                     quantum_pos = pos - 1 - pos
                 else:
                     classical_pos = pos - 1 - pos
-        if quantum_pos != -1 and classical_pos != -1 and classical_pos < quantum_pos:
+        if (quantum_pos != -1 and classical_pos != -1 and classical_pos < quantum_pos) or quantum_pos == 0:
             return_list.append(col_nr)
     return return_list
 
