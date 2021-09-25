@@ -49,6 +49,78 @@ def measure(column: int, start_point: int):
                 board[piece1[0], piece1[1]] = 0
                 board[piece2[0], piece2[1]] = val
             quantum_list.remove(val)
+            
+            
+def check_move(column):
+    
+    """
+    returns True is there is enough space in the column to put a piece here
+    """
+    
+    if board[0, column] == 0:
+        return True
+    else :
+        return False
+ 
+    
+ 
+def create_quantum_piece(column1, column2):
+    
+    """
+    quantum piece is created, gets 2 columns as input, updates the board after the 
+    move and returns a, b = True, True if the move is possible, otherwise the player
+    has to select another column
+    """
+    
+    a = check_move(column1)
+    if a == True:
+        board[0, column1] = draw_counter
+        gravity_column(column1)
+    else :
+        print("select another column")
+    b = check_move(column2)
+    if b == True:
+        board[0, column2] = draw_counter
+        gravity_column(column2)
+    else :
+        print("select another column")
+    if a == True and b == True:
+        quantum_list = quantum_list + [draw_counter]
+    return(a, b)
+
+
+
+def gravity_column(column):
+    
+    """
+    puts gravity to the board
+    """
+    
+    a = board[:, column]
+    a = a[a != 0]
+    while len(a) <= height-1:
+        a = np.append(np.array([0]), a)
+        if len(a) == height:
+            break
+    board[:, column] = a
+
+
+    
+def create_piece(column):
+    
+    """
+    classical piece is created, gets 1 column as input, updates the board after the 
+    move and returns a = True if the move is possible, otherwise the player
+    has to select another column
+    """
+    
+    a = check_move(column)
+    if a == True:
+        board[0, column] = draw_counter
+        gravity_column(column)
+    else :
+        print("select another column")
+
 
 
 width, height = 7, 6
