@@ -25,6 +25,8 @@ if __name__ == main():
 
 
 def check_win() -> int:
+    ''' Checks whether the game is over
+    :returns: int>0: player who won, -2: tie, -1: nobody has won, yet'''
 
     winner = -2
     winturn = 2 * width * height  # a number sufficiently big, that the real winturn is smaller for sure
@@ -100,7 +102,17 @@ def check_win() -> int:
     return winner + 1
 
 
-def check_field(winner: int, winturn:int, tempwinturn:int, player:int, counter:int, field:int)->(int, int, int, int, int):
+def check_field(winner: int, winturn:int, tempwinturn:int, player:int, counter:int, field:int) -> tuple[int, int, int, int, int]:
+    '''Checks field for relevant changes for the check_win method.
+    :winner: current winner
+    :winturn: current minimal number of turns to win
+    :tempwinturn: temporary winturn number
+    :player: owner of the previously checked piece
+    :counter: counts the connected pieces
+    :field: current place on the board
+    :returns: new winner, winturn, tempwinturn, player and counter'''
+
+
     if (field != 0 and field not in quantum_list):  # If  a classical piece lies there
         new_player = field % player_nr
         if (player == new_player):
