@@ -30,61 +30,93 @@ def check_win() -> int:
     tempwinturn = -1
     player = -1
     counter = 0
+
     # check rows
     for row in range(height):
         for column in range(width):
             field = board[row][column]
 
-            if (field != 0 and field not in quantum_list):         # If  a classical piece lies there
-                new_player = field % player_nr
-                if (player == new_player):
-                    counter += 1
-                    if (field > tempwinturn):
-                        tempwinturn = field
-
-                    if (counter == psi and tempwinturn < winturn):  # If we have a new winner
-                        winturn = tempwinturn
-                        winner = player
-
-                else:
-                    player = new_player
-                    counter = 1
-                    tempwinturn = field
-            else:
-                counter = 0
-                player = -1
-                tempwinturn = -1
-
-            counter = 0
-            tempwinturn = -1
+            winner, winturn, tempwinturn, player, counter = check_field(winner, winturn, tempwinturn, player, counter, field)
+        counter = 0
+        tempwinturn = -1
 
     # check columns
     for column in range(width):
         for row in range(height):
-
             field = board[row][column]
 
-            if (field != 0 and field not in quantum_list):  # If  a classical piece lies there
-                new_player = field % player_nr
-                if (player == new_player):
-                    counter += 1
-                    if (field > tempwinturn):
-                        tempwinturn = field
+            winner, winturn, tempwinturn, player, counter = check_field(winner, winturn, tempwinturn, player, counter, field)
+        counter = 0
+        tempwinturn = -1
 
-                    if (counter == psi and tempwinturn < winturn):  # if we have a new winner
-                        winturn = tempwinturn
-                        winner = player
+    # check diagonals top to bottom
+    for column in range(0,width-psi):
+        x = 0
+        while ((column + x) < width and x < height):
+            field = board[x][column +x]
+            winner, winturn, tempwinturn, player, counter = check_field(winner, winturn, tempwinturn, player, counter, field)
+            x+=1
 
-                else:
-                    player = new_player
-                    counter = 1
-                    tempwinturn = field
-            else:
-                counter = 0
-                player = -1
-                tempwinturn = -1
+        counter = 0
+        tempwinturn = -1
 
-            counter = 0
-            tempwinturn = -1
+    for row in range(1, height-psi):
+        x = 0
+        while((row + x) < height and x < width):
+            field = board[row + x][x]
+            winner, winturn, tempwinturn, player, counter = check_field(winner, winturn, tempwinturn, player, counter, field)
+            x += 1
 
-    return -1
+        counter = 0
+        tempwinturn = -1
+
+    # check diagonals bottom to top
+    for column in range(0, width-psi):
+        x = 0
+        while ((column + x) < width and x < height):
+            field = board[height - 1 - x][column + x]
+            winner, winturn, tempwinturn, player, counter = check_field(winner, winturn, tempwinturn, player, counter,
+                                                                        field)
+            x += 1
+
+        counter = 0
+        tempwinturn = -1
+
+    for row in range(1, height - psi):
+        x = 0
+        while ((row + x) < height and x < width):
+            field = board[height - 1 - x - row][x]
+            winner, winturn, tempwinturn, player, counter = check_field(winner, winturn, tempwinturn, player, counter,
+                                                                        field)
+            x += 1
+
+        counter = 0
+        tempwinturn = -1
+
+
+
+    return winner
+
+
+def check_field(winner: int, winturn:int, tempwinturn:int, player:int, counter:int, field:int)->(int, int, int, int, int):
+    if (field != 0 and field not in quantum_list):  # If  a classical piece lies there
+        new_player = field % player_nr
+        if (player == new_player):
+            counter += 1
+            if (field > tempwinturn):
+                tempwinturn = field
+
+            if (counter == psi and tempwinturn < winturn):  # If we have a new winner
+                winturn = tempwinturn
+                winner = player
+
+        else:
+            player = new_player
+            counter = 1
+            tempwinturn = field
+    else:
+        counter = 0
+        player = -1
+        tempwinturn = -1
+
+    return winner, winturn, tempwinturn, player, counter
