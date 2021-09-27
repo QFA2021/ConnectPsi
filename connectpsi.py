@@ -6,26 +6,28 @@ import numpy as np
 import pyglet as pg
 
 
-def check_measure() -> list[tuple[int, int]]:
-    """Checks if there need to be taken any measurements.
-    :returns: columns to be measured and point to start measurement
+def measure(column: int):
+    """Checks if there need to be taken any measurements and takes them.
+    :column: column in which to start measurement
     """
-    return_list = []  # list of columns to be measured
-    for col_nr, column in enumerate(board.T):
+    board_shifted = np.append(board.T[column:], board.T[:column]).reshape(width, height)
+    for col_nr, col in enumerate(board_shifted):
+        col_nr = (col_nr + column) % width
         quantum_pos = -1  # position of highest quantum piece
-        classical_pos = 100000  # position of highest classical piece
-        for pos, val in enumerate(column[::-1]):
+        classical_pos = -1  # position of highest classical piece
+        for pos, val in enumerate(col[::-1]):
             if val != 0:
                 if val in quantum_list:
-                    quantum_pos = len(column) - 1 - pos
+                    quantum_pos = len(col) - 1 - pos
                 else:
-                    classical_pos = len(column) - 1 - pos
-        if (quantum_pos != -1 and classical_pos != -1 and classical_pos < quantum_pos) or quantum_pos == 0:
-            return_list.append((col_nr, classical_pos))
-    return return_list
+                    classical_pos = len(col) - 1 - pos
+        if quantum_pos != -1 and classical_pos != -1 and classical_pos < quantum_pos:
+            measure_column(col_nr, classical_pos)
+        elif quantum_pos == 0 and col[1] == col[0]:
+            measure_column(col_nr, 0)
 
 
-def measure(column: int, start_point: int):
+def measure_column(column: int, start_point: int):
     """Measures the given column, collapsing quantum super positions.
     :column: the column to measure
     :start_point: row at which the measurement should be started
@@ -64,8 +66,6 @@ def create_quantum_piece(column) -> bool:
         board[0, column] = draw_counter
         if not second_quantum_move:
             quantum_list.append(draw_counter)
-    else:
-        print("select another column")  # TODO: game logic
     return a
 
 
@@ -77,8 +77,6 @@ def create_piece(column) -> bool:
     a = check_move(column)
     if a:
         board[0, column] = draw_counter
-    else:
-        print("select another column")  # TODO: game logic
     return a
 
 
@@ -287,7 +285,7 @@ batch = pg.graphics.Batch()
 rectangle = pg.shapes.Rectangle(offset_x, offset_y, width=int(size_x - 2 * offset_x),
                                 height=int((size_x - 2 * offset_x) * height / width), color=(230, 230, 230),
                                 batch=batch)
-arrow = pg.image.load('arrow2.png')
+arrow = pg.image.load('arrow.png')
 sprite = pg.sprite.Sprite(img=arrow)
 sprite.scale = 0.2
 draw_board()
@@ -303,12 +301,11 @@ def on_key_press(symbol, modifiers):
         elif symbol == pg.window.key.RIGHT:
             pos = (pos + 1) % (width)
             arrow.x = pos * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
-        elif symbol == pg.window.key.ENTER:
-            create_quantum_piece(pos)
+        elif symbol == pg.window.key.ENTER and create_quantum_piece(pos):
             second_quantum_move = False
             draw_counter += 1
-            for col, start_point in check_measure():
-                measure(col, start_point)
+            gravity_column(pos)
+            measure(pos)
             for col in range(width):
                 gravity_column(col)
     else:
@@ -321,15 +318,12 @@ def on_key_press(symbol, modifiers):
             pos = (pos + 1) % (width)
             arrow.x = pos * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
         elif symbol == pg.window.key.ENTER:
-            if is_quantum_move:
-                create_quantum_piece(pos)
+            if is_quantum_move and create_quantum_piece(pos):
                 gravity_column(pos)
                 second_quantum_move = True
-            else:
-                create_piece(pos)
+            elif create_piece(pos):
                 draw_counter += 1
-                for col, start_point in check_measure():
-                    measure(col, start_point)
+                measure(pos)
                 for col in range(width):
                     gravity_column(col)
 
