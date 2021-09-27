@@ -4,12 +4,11 @@ Connect Four, but quantum and bigger.
 
 ## Course of the Game
 
-With each turn the player has two different options: 
-
-Either he chooses one column for a classical piece, 
-or he chooses one or two columns for quantum pieces.
-The new pieces drop down as far as possible. They get enumerated
-in both cases which can get important in order to appoint the winner later on. 
+With each turn the player has two different options. Either he chooses 
+one column for a classical piece, or he chooses one or two columns 
+for quantum pieces. The new pieces drop down as far as possible. 
+They get enumerated in both cases which can get important in order to 
+appoint the winner later on. 
 
 ## Measurements
 
@@ -31,4 +30,5 @@ the one who would have completed his row fist, won.
 
 ## Possible Versions
 
-Are not implemented, yet. 
+The game is suitable for up to five persons. Furthermore, the boards` size 
+as well as the number of pieces needed to win, can be adjusted.
