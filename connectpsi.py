@@ -376,6 +376,7 @@ def on_key_press(symbol, modifiers):
         if won != -1:
             draw_win(won)
 
+
 @window.event
 def on_draw():
     global won
