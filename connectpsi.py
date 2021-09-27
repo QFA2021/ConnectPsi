@@ -229,7 +229,7 @@ def get_playercolor(d):
     elif d % player_nr == 3:
         a = (255, 255, 0)
     elif d % player_nr == 4:
-        a = (0,255, 255)
+        a = (0, 255, 255)
     else:
         a = (100, 100, 100)
     return a
@@ -244,35 +244,37 @@ def draw_board():
     for i in range(height):
         for j in range(width):
             c = get_playercolor(board[i, j])
-            circle = pg.shapes.Circle(offset_x + (const2 + r)*(2*j+1),
-                                      2*(height - i) * (const2 + r) - r + const2,
+            circle = pg.shapes.Circle(offset_x + (const2 + r) * (2 * j + 1),
+                                      2 * (height - i) * (const2 + r) - r + const2,
                                       r, color=c, batch=batch)
             if board[i, j] in quantum_list:
                 circle.opacity = 80
             if board[i, j] != 0:
-                label = pg.text.Label(str(board[i, j]), font_size=int(0.4*r), bold=True, color=(25, 25, 25, 255),
+                label = pg.text.Label(str(board[i, j]), font_size=int(0.4 * r), bold=True, color=(25, 25, 25, 255),
                                       x=offset_x + (const2 + r) * (2 * j + 1),
                                       y=2 * (height - i) * (const2 + r) - r + const2,
                                       anchor_x='center', anchor_y='center')
                 labels.append(label)
             circles.append(circle)
     text_turn = pg.text.Label('Turn: ' + str(draw_counter), font_size=50, bold=True,
-                              x=int(size_x - 6 * offset_x - 100), y=int(rectangle.height + 5 * offset_y), anchor_x='center',
+                              x=int(size_x - 6 * offset_x - 100), y=int(rectangle.height + 5 * offset_y),
+                              anchor_x='center',
                               anchor_y='center')
     text_turn.draw()
 
     if is_quantum_move:
-        label_qm = pg.text.Label('Q', font_size=50, bold = True, italic = True, x = 2.9*offset_x,
+        label_qm = pg.text.Label('Q', font_size=50, bold=True, italic=True, x=2.9 * offset_x,
                                  y=int(rectangle.height + 5 * offset_y),
-                        anchor_x='center', anchor_y='center' )
+                                 anchor_x='center', anchor_y='center')
         label_qm.draw()
     batch.draw()
     for elem in labels:
         elem.draw()
     sprite.position = (
-        position * 2*(const2 + r) + const2 + offset_x + r - 0.5*sprite.width,
+        position * 2 * (const2 + r) + const2 + offset_x + r - 0.5 * sprite.width,
         (size_y - 140))
     sprite.draw()
+
 
 def draw_win(winner: int):
     """
@@ -284,11 +286,11 @@ def draw_win(winner: int):
                                     anchor_y='center')
         tie_message.draw()
     else:
-        win_message = pg.text.Label('Player ' + str(winner) + ' has won!', font_size=int(2 * scaling_circ), bold=True, color=(0, 0, 0, 0),
-                                  x=size_x//2, y=size_y//2, anchor_x='center',
-                                  anchor_y='center')
+        win_message = pg.text.Label('Player ' + str(winner) + ' has won!', font_size=int(2 * scaling_circ), bold=True,
+                                    color=(0, 0, 0, 0),
+                                    x=size_x // 2, y=size_y // 2, anchor_x='center',
+                                    anchor_y='center')
         win_message.draw()
-
 
 
 width, height = 7, 6
@@ -300,17 +302,13 @@ board = np.zeros((height, width), dtype="int16")
 quantum_list = []
 is_quantum_move, second_quantum_move = False, False
 
-
-#global_scaling = width * 15
-TOP_DISTANCE = 160
+top_distance = 160
 size_x = 1280
-size_y = int(size_x * height / width) + TOP_DISTANCE
-#scaling = 2
-#scaling_circ = 20
+size_y = int(size_x * height / width) + top_distance
 offset_x = 20
 offset_y = 20
 const2 = 8
-r = (size_x-2*offset_x)/(2*width) - const2
+r = (size_x - 2 * offset_x) / (2 * width) - const2
 position = 0
 
 window = pg.window.Window(size_x, size_y)
