@@ -283,20 +283,20 @@ def draw_win(winner: int):
     :param winner: Player who has won the game
     """
     if winner == -2:
-        tie_message = pg.text.Label('Tie!', font_size=int(2 * scaling_circ), bold=True, color=(0, 0, 0, 0),
+        tie_message = pg.text.Label('Tie!', font_size=100, bold=True, color=(0, 0, 0, 255),
                                     x=size_x // 2, y=size_y // 2, anchor_x='center',
                                     anchor_y='center')
         tie_message.draw()
     else:
-        win_message = pg.text.Label('Player ' + str(winner) + ' has won!', font_size=int(2 * scaling_circ), bold=True,
-                                    color=(0, 0, 0, 0),
+        win_message = pg.text.Label('Player ' + str(winner) + ' has won!', font_size=100, bold=True,
+                                    color=(0, 0, 0, 255),
                                     x=size_x // 2, y=size_y // 2, anchor_x='center',
                                     anchor_y='center')
         win_message.draw()
 
 
 width, height = 7, 6
-player_nr = 6
+player_nr = 2
 psi = 4  # number of connected pieces to win
 won = -1
 draw_counter = 1
@@ -327,8 +327,14 @@ draw_board()
 @window.event
 def on_key_press(symbol, modifiers):
     global board, quantum_list, position, is_quantum_move, second_quantum_move, draw_counter, won
-    won = check_win()
-    if won == -1:
+    if won != -1:
+        if symbol == pg.window.key.ENTER:
+            won = -1
+            draw_counter = 1
+            board = np.zeros((height, width), dtype="int16")
+            quantum_list = []
+            is_quantum_move, second_quantum_move = False, False
+    else:
         if second_quantum_move:
             if symbol == pg.window.key.LEFT:
                 position = (position - 1) % width
@@ -361,20 +367,16 @@ def on_key_press(symbol, modifiers):
                     measure(position)
                     for col in range(width):
                         gravity_column(col)
-    else:
-        if symbol == pg.window.key.ENTER:
-            won = -1
-            draw_counter = 1
-            board = np.zeros((height, width), dtype="int16")
-            quantum_list = []
-            is_quantum_move, second_quantum_move = False, False
-
+        won = check_win()
+        if won != -1:
+            draw_win(won)
 
 @window.event
 def on_draw():
     global won
     window.clear()
     draw_board()
+
     if won != -1:
         draw_win(won)
 
