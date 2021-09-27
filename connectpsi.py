@@ -256,8 +256,8 @@ def draw_board():
                                       anchor_x='center', anchor_y='center')
                 labels.append(label)
             circles.append(circle)
-    text_turn = pg.text.Label('Turn: ' + str(draw_counter), font_size=int(1.8 * scaling_circ), bold=True,
-                              x=int(size_x - 6 * offset_x), y=int(rectangle.height + 5 * offset_y), anchor_x='center',
+    text_turn = pg.text.Label('Turn: ' + str(draw_counter), font_size=50, bold=True,
+                              x=int(size_x - 6 * offset_x - 100), y=int(rectangle.height + 5 * offset_y), anchor_x='center',
                               anchor_y='center')
     text_turn.draw()
 
@@ -270,7 +270,7 @@ def draw_board():
     for elem in labels:
         elem.draw()
     sprite.position = (
-        (pos) * 2*(const2 + r) + const2 + offset_x + r - 0.5*sprite.width,
+        position * 2*(const2 + r) + const2 + offset_x + r - 0.5*sprite.width,
         (size_y - 140))
     sprite.draw()
 
