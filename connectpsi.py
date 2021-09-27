@@ -70,7 +70,8 @@ def create_quantum_piece(column) -> bool:
 
 
 def create_piece(column) -> bool:
-    """Classical piece is created, gets 1 column as input, updates the board after the move and returns a = True if the move is possible, otherwise the player has to select another column
+    """Classical piece is created, gets 1 column as input, updates the board after the move and returns a = True
+    if the move is possible, otherwise the player has to select another column
     :column: column to place the classical piece in
     :returns: whether the move was possible
     """
@@ -175,7 +176,7 @@ def check_win() -> int:
         counter = 0
         tempwinturn = -1
 
-    if not 0 in board and winner == -2:
+    if 0 not in board and winner == -2:
         return -2
 
     return winner + 1
@@ -216,22 +217,30 @@ def check_field(
     return winner, winturn, tempwinturn, player, counter
 
 
-def get_playercolor(d):
-    if d == 0:
-        a = (190, 190, 190)
-    elif d % player_nr == 0:
-        a = (255, 0, 0)
-    elif d % player_nr == 1:
-        a = (0, 255, 0)
-    elif d % player_nr == 2:
-        a = (0, 0, 255)
-    elif d % player_nr == 3:
-        a = (255, 255, 0)
-    return (a)
+def get_playercolor(turn: int) -> tuple[int, int, int]:
+    """
+    :turn: turn of the game
+    :returns: color of the player
+    """
+    if turn == 0:
+        color = (190, 190, 190)
+    elif turn % player_nr == 0:
+        color = (255, 0, 0)
+    elif turn % player_nr == 1:
+        color = (0, 255, 0)
+    elif turn % player_nr == 2:
+        color = (0, 0, 255)
+    elif turn % player_nr == 3:
+        color = (255, 255, 0)
+    else:
+        color = (100, 100, 100)
+    return color
 
 
 def draw_board():
-    liste = []
+    """Draws all of the pieces and their labels as well as the arrow.
+    """
+    circles = []
     labels = []
     for i in range(height):
         for j in range(width):
@@ -239,7 +248,7 @@ def draw_board():
             circle = pg.shapes.Circle(j * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x,
                                       (height - i - 1) * (rectangle.height // height) + rectangle.height // (
                                               height * 2) + offset_y,
-                                      rectangle.width // (scaling_circ), color=c, batch=batch)
+                                      rectangle.width // scaling_circ, color=c, batch=batch)
             if board[i, j] in quantum_list:
                 circle.opacity = 80
             if board[i, j] != 0:
@@ -249,7 +258,7 @@ def draw_board():
                                               height * 2) + offset_y,
                                       anchor_x='center', anchor_y='center')
                 labels.append(label)
-            liste.append(circle)
+            circles.append(circle)
     text_turn = pg.text.Label('Turn: ' + str(draw_counter), font_size=int(1.8 * scaling_circ), bold=True,
                               x=int(size_x - 6 * offset_x), y=int(rectangle.height + 5 * offset_y), anchor_x='center',
                               anchor_y='center')
@@ -258,7 +267,7 @@ def draw_board():
     for elem in labels:
         elem.draw()
     sprite.position = (
-        (pos + 1) * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x - arrow.width / 2,
+        (position + 1) * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x - arrow.width / 2,
         (height - 0.4) * (rectangle.height // height) + rectangle.height // (height * 2) + offset_y)
     sprite.draw()
 
@@ -278,7 +287,7 @@ scaling = 2
 scaling_circ = 20
 offset_x = size_x // 30  # 10
 offset_y = size_y // 30  # 10
-pos = 0
+position = 0
 
 window = pg.window.Window(size_x, size_y + 120)
 batch = pg.graphics.Batch()
@@ -293,37 +302,37 @@ draw_board()
 
 @window.event
 def on_key_press(symbol, modifiers):
-    global pos, is_quantum_move, second_quantum_move, draw_counter
+    global position, is_quantum_move, second_quantum_move, draw_counter
     if second_quantum_move:
         if symbol == pg.window.key.LEFT:
-            pos = (pos - 1) % (width)
-            arrow.x = pos * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
+            position = (position - 1) % width
+            arrow.x = position * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
         elif symbol == pg.window.key.RIGHT:
-            pos = (pos + 1) % (width)
-            arrow.x = pos * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
-        elif symbol == pg.window.key.ENTER and create_quantum_piece(pos):
+            position = (position + 1) % width
+            arrow.x = position * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
+        elif symbol == pg.window.key.ENTER and create_quantum_piece(position):
             second_quantum_move = False
             draw_counter += 1
-            gravity_column(pos)
-            measure(pos)
+            gravity_column(position)
+            measure(position)
             for col in range(width):
                 gravity_column(col)
     else:
         if symbol == pg.window.key.Q:
             is_quantum_move = not is_quantum_move
         elif symbol == pg.window.key.LEFT:
-            pos = (pos - 1) % (width)
-            arrow.x = pos * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
+            position = (position - 1) % width
+            arrow.x = position * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
         elif symbol == pg.window.key.RIGHT:
-            pos = (pos + 1) % (width)
-            arrow.x = pos * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
+            position = (position + 1) % width
+            arrow.x = position * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
         elif symbol == pg.window.key.ENTER:
-            if is_quantum_move and create_quantum_piece(pos):
-                gravity_column(pos)
+            if is_quantum_move and create_quantum_piece(position):
+                gravity_column(position)
                 second_quantum_move = True
-            elif create_piece(pos):
+            elif create_piece(position):
                 draw_counter += 1
-                measure(pos)
+                measure(position)
                 for col in range(width):
                     gravity_column(col)
 
