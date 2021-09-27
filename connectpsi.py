@@ -25,6 +25,11 @@ def measure(column: int):
             measure_column(col_nr, classical_pos)
         elif quantum_pos == 0 and col[1] == col[0]:
             measure_column(col_nr, 0)
+        elif col[0] in quantum_list:
+            pieces = np.argwhere(board == col[0])
+            if pieces[0, 0] == 0 and pieces[1, 0] == 0:
+                measure_column(pieces[0, 1], 0)
+                measure_column(pieces[1, 1], 0)
 
 
 def measure_column(column: int, start_point: int):
