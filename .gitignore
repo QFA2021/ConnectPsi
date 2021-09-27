@@ -67,3 +67,12 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+#IntelliJ folders
+.idea
+venv
+
+#Jupyter folders
+.ipynb_checkpoints
+
+#VS Code folders
+.vscode
