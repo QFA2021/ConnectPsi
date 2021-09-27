@@ -94,7 +94,7 @@ def gravity_column(column: int):
 
 def check_win() -> int:
     """Checks whether the game is over
-    :returns: int>0: player who won, -2: tie, -1: nobody has won, yet
+    :returns: int>0: player who won, -2: tie, -1: nobody has won yet
     """
     winner = -2
     winturn = (
@@ -271,13 +271,30 @@ def draw_board():
         (height - 0.4) * (rectangle.height // height) + rectangle.height // (height * 2) + offset_y)
     sprite.draw()
 
+def draw_win(winner: int):
+    """
+    :param winner: Player who has won the game
+    """
+    if winner == -2:
+        tie_message = pg.text.Label('Tie!', font_size=int(2 * scaling_circ), bold=True, color=(0, 0, 0, 0),
+                                    x=size_x // 2, y=size_y // 2, anchor_x='center',
+                                    anchor_y='center')
+        tie_message.draw()
+    else:
+        win_message = pg.text.Label('Player ' + str(winner) + ' has won!', font_size=int(2 * scaling_circ), bold=True, color=(0, 0, 0, 0),
+                                  x=size_x//2, y=size_y//2, anchor_x='center',
+                                  anchor_y='center')
+        win_message.draw()
+
+
 
 width, height = 7, 6
 player_nr = 2
+psi = 4  # number of connected pieces to win
+won = -1
 draw_counter = 1
 board = np.zeros((height, width), dtype="int16")
 quantum_list = []
-psi = 4  # number of connected pieces to win
 is_quantum_move, second_quantum_move = False, False
 
 global_scaling = width * 15
@@ -302,45 +319,57 @@ draw_board()
 
 @window.event
 def on_key_press(symbol, modifiers):
-    global position, is_quantum_move, second_quantum_move, draw_counter
-    if second_quantum_move:
-        if symbol == pg.window.key.LEFT:
-            position = (position - 1) % width
-            arrow.x = position * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
-        elif symbol == pg.window.key.RIGHT:
-            position = (position + 1) % width
-            arrow.x = position * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
-        elif symbol == pg.window.key.ENTER and create_quantum_piece(position):
-            second_quantum_move = False
-            draw_counter += 1
-            gravity_column(position)
-            measure(position)
-            for col in range(width):
-                gravity_column(col)
-    else:
-        if symbol == pg.window.key.Q:
-            is_quantum_move = not is_quantum_move
-        elif symbol == pg.window.key.LEFT:
-            position = (position - 1) % width
-            arrow.x = position * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
-        elif symbol == pg.window.key.RIGHT:
-            position = (position + 1) % width
-            arrow.x = position * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
-        elif symbol == pg.window.key.ENTER:
-            if is_quantum_move and create_quantum_piece(position):
-                gravity_column(position)
-                second_quantum_move = True
-            elif create_piece(position):
+    global board, quantum_list, position, is_quantum_move, second_quantum_move, draw_counter, won
+    won = check_win()
+    if won == -1:
+        if second_quantum_move:
+            if symbol == pg.window.key.LEFT:
+                position = (position - 1) % width
+                arrow.x = position * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
+            elif symbol == pg.window.key.RIGHT:
+                position = (position + 1) % width
+                arrow.x = position * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
+            elif symbol == pg.window.key.ENTER and create_quantum_piece(position):
+                second_quantum_move = False
                 draw_counter += 1
+                gravity_column(position)
                 measure(position)
                 for col in range(width):
                     gravity_column(col)
+        else:
+            if symbol == pg.window.key.Q:
+                is_quantum_move = not is_quantum_move
+            elif symbol == pg.window.key.LEFT:
+                position = (position - 1) % width
+                arrow.x = position * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
+            elif symbol == pg.window.key.RIGHT:
+                position = (position + 1) % width
+                arrow.x = position * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
+            elif symbol == pg.window.key.ENTER:
+                if is_quantum_move and create_quantum_piece(position):
+                    gravity_column(position)
+                    second_quantum_move = True
+                elif create_piece(position):
+                    draw_counter += 1
+                    measure(position)
+                    for col in range(width):
+                        gravity_column(col)
+    else:
+        if symbol == pg.window.key.ENTER:
+            won = -1
+            draw_counter = 1
+            board = np.zeros((height, width), dtype="int16")
+            quantum_list = []
+            is_quantum_move, second_quantum_move = False, False
 
 
 @window.event
 def on_draw():
+    global won
     window.clear()
     draw_board()
+    if won != -1:
+        draw_win(won)
 
 
 pg.app.run()
