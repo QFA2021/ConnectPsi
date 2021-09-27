@@ -6,32 +6,22 @@ import numpy as np
 import pyglet as pg
 
 
-def main():
-    """Main method to be run when executing file.
-    :board: array functioning as the game board
-    :quantum_list: list of quantum stones
-    """
-    pass
-
-
-def check_measure() -> list[int]:
+def check_measure() -> list[tuple[int, int]]:
     """Checks if there need to be taken any measurements.
     :returns: columns to be measured and point to start measurement
     """
     return_list = []  # list of columns to be measured
     for col_nr, column in enumerate(board.T):
         quantum_pos = -1  # position of highest quantum piece
-        classical_pos = -1  # position of highest classical piece
+        classical_pos = 100000  # position of highest classical piece
         for pos, val in enumerate(column[::-1]):
             if val != 0:
                 if val in quantum_list:
-                    quantum_pos = pos - 1 - pos
+                    quantum_pos = len(column) - 1 - pos
                 else:
-                    classical_pos = pos - 1 - pos
-        if (
-            quantum_pos != -1 and classical_pos != -1 and classical_pos < quantum_pos
-        ) or quantum_pos == 0:
-            return_list.append((col_nr, quantum_pos))
+                    classical_pos = len(column) - 1 - pos
+        if (quantum_pos != -1 and classical_pos != -1 and classical_pos < quantum_pos) or quantum_pos == 0:
+            return_list.append((col_nr, classical_pos))
     return return_list
 
 
@@ -70,15 +60,12 @@ def create_quantum_piece(column) -> bool:
     :returns: whether the move was possible
     """
     a = check_move(column)
-    if a == True:
+    if a:
         board[0, column] = draw_counter
-        if board[1, column] != 0:
-            measure(column, 0)
-        gravity_column(column)
+        if not second_quantum_move:
+            quantum_list.append(draw_counter)
     else:
         print("select another column")  # TODO: game logic
-    if a:
-        quantum_list.append(draw_counter)
     return a
 
 
@@ -88,10 +75,8 @@ def create_piece(column) -> bool:
     :returns: whether the move was possible
     """
     a = check_move(column)
-    if a == True:
+    if a:
         board[0, column] = draw_counter
-        measure(column, 0)
-        gravity_column(column)
     else:
         print("select another column")  # TODO: game logic
     return a
@@ -114,7 +99,7 @@ def check_win() -> int:
     """
     winner = -2
     winturn = (
-        2 * width * height
+            2 * width * height
     )  # a number sufficiently big, that the real winturn is smaller for sure
     tempwinturn = -1
     player = -1
@@ -199,7 +184,7 @@ def check_win() -> int:
 
 
 def check_field(
-    winner: int, winturn: int, tempwinturn: int, player: int, counter: int, field: int
+        winner: int, winturn: int, tempwinturn: int, player: int, counter: int, field: int
 ) -> tuple[int, int, int, int, int]:
     """Checks field for relevant changes for the check_win method.
     :winner: current winner
@@ -233,12 +218,126 @@ def check_field(
     return winner, winturn, tempwinturn, player, counter
 
 
+def get_playercolor(d):
+    if d == 0:
+        a = (190, 190, 190)
+    elif d % player_nr == 0:
+        a = (255, 0, 0)
+    elif d % player_nr == 1:
+        a = (0, 255, 0)
+    elif d % player_nr == 2:
+        a = (0, 0, 255)
+    elif d % player_nr == 3:
+        a = (255, 255, 0)
+    return (a)
+
+
+def draw_board():
+    liste = []
+    labels = []
+    for i in range(height):
+        for j in range(width):
+            c = get_playercolor(board[i, j])
+            circle = pg.shapes.Circle(j * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x,
+                                      (height - i - 1) * (rectangle.height // height) + rectangle.height // (
+                                              height * 2) + offset_y,
+                                      rectangle.width // (scaling_circ), color=c, batch=batch)
+            if board[i, j] in quantum_list:
+                circle.opacity = 80
+            if board[i, j] != 0:
+                label = pg.text.Label(str(board[i, j]), font_size=16, bold=True, color=(25, 25, 25, 255),
+                                      x=j * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x,
+                                      y=(height - i - 1) * (rectangle.height // height) + rectangle.height // (
+                                              height * 2) + offset_y,
+                                      anchor_x='center', anchor_y='center')
+                labels.append(label)
+            liste.append(circle)
+    text_turn = pg.text.Label('Turn: ' + str(draw_counter), font_size=int(1.8 * scaling_circ), bold=True,
+                              x=int(size_x - 6 * offset_x), y=int(rectangle.height + 5 * offset_y), anchor_x='center',
+                              anchor_y='center')
+    text_turn.draw()
+    batch.draw()
+    for elem in labels:
+        elem.draw()
+    sprite.position = (
+        (pos + 1) * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x - arrow.width / 2,
+        (height - 0.4) * (rectangle.height // height) + rectangle.height // (height * 2) + offset_y)
+    sprite.draw()
+
+
 width, height = 7, 6
 player_nr = 2
-draw_counter = 0
+draw_counter = 1
 board = np.zeros((height, width), dtype="int16")
 quantum_list = []
 psi = 4  # number of connected pieces to win
+is_quantum_move, second_quantum_move = False, False
 
-if __name__ == main():
-    main()
+global_scaling = width * 15
+size_x = int(width * global_scaling)  # 1280
+size_y = int(size_x * height / width)  # 720
+scaling = 2
+scaling_circ = 20
+offset_x = size_x // 30  # 10
+offset_y = size_y // 30  # 10
+pos = 0
+
+window = pg.window.Window(size_x, size_y + 120)
+batch = pg.graphics.Batch()
+rectangle = pg.shapes.Rectangle(offset_x, offset_y, width=int(size_x - 2 * offset_x),
+                                height=int((size_x - 2 * offset_x) * height / width), color=(230, 230, 230),
+                                batch=batch)
+arrow = pg.image.load('arrow2.png')
+sprite = pg.sprite.Sprite(img=arrow)
+sprite.scale = 0.2
+draw_board()
+
+
+@window.event
+def on_key_press(symbol, modifiers):
+    global pos, is_quantum_move, second_quantum_move, draw_counter
+    if second_quantum_move:
+        if symbol == pg.window.key.LEFT:
+            pos = (pos - 1) % (width)
+            arrow.x = pos * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
+        elif symbol == pg.window.key.RIGHT:
+            pos = (pos + 1) % (width)
+            arrow.x = pos * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
+        elif symbol == pg.window.key.ENTER:
+            create_quantum_piece(pos)
+            second_quantum_move = False
+            draw_counter += 1
+            for col, start_point in check_measure():
+                measure(col, start_point)
+            for col in range(width):
+                gravity_column(col)
+    else:
+        if symbol == pg.window.key.Q:
+            is_quantum_move = not is_quantum_move
+        elif symbol == pg.window.key.LEFT:
+            pos = (pos - 1) % (width)
+            arrow.x = pos * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
+        elif symbol == pg.window.key.RIGHT:
+            pos = (pos + 1) % (width)
+            arrow.x = pos * (rectangle.width // width) + rectangle.width // (width * 2) + offset_x
+        elif symbol == pg.window.key.ENTER:
+            if is_quantum_move:
+                create_quantum_piece(pos)
+                gravity_column(pos)
+                second_quantum_move = True
+            else:
+                create_piece(pos)
+                draw_counter += 1
+                for col, start_point in check_measure():
+                    measure(col, start_point)
+                for col in range(width):
+                    gravity_column(col)
+
+
+@window.event
+def on_draw():
+    window.clear()
+    draw_board()
+
+
+pg.app.run()
