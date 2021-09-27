@@ -264,14 +264,14 @@ def draw_board():
                 labels.append(label)
             circles.append(circle)
     text_turn = pg.text.Label('Turn: ' + str(draw_counter), font_size=50, bold=True,
-                              x=int(size_x - 6 * offset_x - 100), y=int(rectangle.height + 5 * offset_y),
+                              x=int(size_x - 6 * offset_x - 50), y=int(rectangle.height + 7 * offset_y),
                               anchor_x='center',
                               anchor_y='center')
     text_turn.draw()
 
     if is_quantum_move:
-        label_qm = pg.text.Label('Q', font_size=50, bold=True, italic=True, x=2.9 * offset_x,
-                                 y=int(rectangle.height + 5 * offset_y),
+        label_qm = pg.text.Label('Q', font_size=50, bold=True, italic=True, x=3 * offset_x,
+                                 y=int(rectangle.height + 7 * offset_y),
                                  anchor_x='center', anchor_y='center')
         label_qm.draw()
     batch.draw()
@@ -282,18 +282,17 @@ def draw_board():
         (size_y - 140))
     sprite.draw()
 
-
 def draw_win(winner: int):
     """
     :param winner: Player who has won the game
     """
     if winner == -2:
-        tie_message = pg.text.Label('Tie!', font_size=100, bold=True, color=(0, 0, 0, 255),
+        tie_message = pg.text.Label('Tie!', font_size=40, bold=True, color=(0, 0, 0, 255),
                                     x=size_x // 2, y=size_y // 2, anchor_x='center',
                                     anchor_y='center')
         tie_message.draw()
     else:
-        win_message = pg.text.Label('Player ' + str(winner) + ' has won!', font_size=100, bold=True,
+        win_message = pg.text.Label('Player ' + str(winner) + ' has won!', font_size=40, bold=True,
                                     color=(0, 0, 0, 255),
                                     x=size_x // 2, y=size_y // 2, anchor_x='center',
                                     anchor_y='center')
@@ -310,7 +309,7 @@ quantum_list = []
 is_quantum_move, second_quantum_move = False, False
 
 top_distance = 160
-size_x = 1280
+size_x = int(1280*0.5)
 size_y = int(size_x * height / width) + top_distance
 offset_x = 20
 offset_y = 20
@@ -326,7 +325,10 @@ rectangle = pg.shapes.Rectangle(offset_x, offset_y, width=int(size_x - 2 * offse
 arrow = pg.image.load('arrow.png')
 sprite = pg.sprite.Sprite(img=arrow)
 sprite.scale = 0.2
+
 draw_board()
+
+
 
 
 @window.event
