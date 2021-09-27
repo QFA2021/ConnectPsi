@@ -230,6 +230,8 @@ def get_playercolor(d):
         a = (255, 255, 0)
     elif d % player_nr == 4:
         a = (0, 255, 255)
+    elif d % player_nr == 5:
+        a = (255, 0, 255)
     else:
         a = (100, 100, 100)
     return a
@@ -294,7 +296,7 @@ def draw_win(winner: int):
 
 
 width, height = 7, 6
-player_nr = 2
+player_nr = 6
 psi = 4  # number of connected pieces to win
 won = -1
 draw_counter = 1

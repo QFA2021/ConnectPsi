@@ -30,5 +30,5 @@ the one who would have completed his row fist, won.
 
 ## Possible Versions
 
-The game is suitable for up to five persons. Furthermore, the boards` size 
+The game is suitable for up to six persons. Furthermore, the boards` size 
 as well as the number of pieces needed to win, can be adjusted.
