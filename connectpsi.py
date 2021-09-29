@@ -10,9 +10,10 @@ def measure(column: int):
     """Checks if there need to be taken any measurements and takes them.
     :column: column in which to start measurement
     """
-    board_shifted = np.append(board.T[column:], board.T[:column]).reshape(width, height)
-    for col_nr, col in enumerate(board_shifted):
-        col_nr = (col_nr + column) % width
+    board_shifted = np.append(board.T[column:], board.T[:column], axis=0)
+    measure_again = False
+    for col_nr_it, col in enumerate(board_shifted):
+        col_nr = (col_nr_it + column) % width
         quantum_pos = -1  # position of highest quantum piece
         classical_pos = -1  # position of highest classical piece
         for pos, val in enumerate(col[::-1]):
@@ -23,13 +24,21 @@ def measure(column: int):
                     classical_pos = len(col) - 1 - pos
         if quantum_pos != -1 and classical_pos != -1 and classical_pos < quantum_pos:
             measure_column(col_nr, classical_pos)
+            measure_again = True
+            break
         elif quantum_pos == 0 and col[1] == col[0]:
             measure_column(col_nr, 0)
+            measure_again = True
+            break
         elif col[0] in quantum_list:
             pieces = np.argwhere(board == col[0])
             if pieces[0, 0] == 0 and pieces[1, 0] == 0:
                 measure_column(pieces[0, 1], 0)
                 measure_column(pieces[1, 1], 0)
+                measure_again = True
+                break
+    if measure_again:
+        measure(column)
 
 
 def measure_column(column: int, start_point: int):
