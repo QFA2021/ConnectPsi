@@ -110,7 +110,7 @@ def check_win() -> int:
     """Checks whether the game is over
     :returns: int>0: player who won, -2: tie, -1: nobody has won yet
     """
-    winner = -2
+    winner = -1
     winturn = (
             2 * width * height
     )  # a number sufficiently big, that the real winturn is smaller for sure
@@ -193,7 +193,7 @@ def check_win() -> int:
     if 0 not in board and winner == -2:
         return -2
 
-    return winner + 1
+    return winner if winner != 0 else player_nr
 
 
 def check_field(
@@ -291,6 +291,7 @@ def draw_board():
         (size_y - 140))
     sprite.draw()
 
+
 def draw_win(winner: int):
     """
     :param winner: Player who has won the game
@@ -318,7 +319,7 @@ quantum_list = []
 is_quantum_move, second_quantum_move = False, False
 
 top_distance = 160
-size_x = int(1280*0.5)
+size_x = int(1280 * 0.5)
 size_y = int(size_x * height / width) + top_distance
 offset_x = 20
 offset_y = 20
@@ -336,8 +337,6 @@ sprite = pg.sprite.Sprite(img=arrow)
 sprite.scale = 0.2
 
 draw_board()
-
-
 
 
 @window.event
@@ -393,7 +392,6 @@ def on_draw():
     global won
     window.clear()
     draw_board()
-
     if won != -1:
         draw_win(won)
 
