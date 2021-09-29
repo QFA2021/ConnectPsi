@@ -141,7 +141,7 @@ def check_win() -> int:
         tempwinturn = -1
 
     # check diagonals top to bottom
-    for column in range(0, width - psi):
+    for column in range(0, width - psi + 2):
         x = 0
         while (column + x) < width and x < height:
             field = board[x][column + x]
@@ -153,7 +153,7 @@ def check_win() -> int:
         counter = 0
         tempwinturn = -1
 
-    for row in range(1, height - psi):
+    for row in range(1, height - psi + 2):
         x = 0
         while (row + x) < height and x < width:
             field = board[row + x][x]
@@ -166,7 +166,7 @@ def check_win() -> int:
         tempwinturn = -1
 
     # check diagonals bottom to top
-    for column in range(0, width - psi):
+    for column in range(0, width - psi + 2):
         x = 0
         while (column + x) < width and x < height:
             field = board[height - 1 - x][column + x]
@@ -178,10 +178,10 @@ def check_win() -> int:
         counter = 0
         tempwinturn = -1
 
-    for row in range(1, height - psi):
+    for row in range(1, height - psi + 2):
         x = 0
-        while (row + x) < height and x < width:
-            field = board[height - 1 - x - row][x]
+        while (row + x) <= height and x < width:
+            field = board[height - x - row][x]
             winner, winturn, tempwinturn, player, counter = check_field(
                 winner, winturn, tempwinturn, player, counter, field
             )
