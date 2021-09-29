@@ -304,10 +304,16 @@ def draw_board():
     batch.draw()
     for elem in labels:
         elem.draw()
-    sprite.position = (
-        position * 2 * (CIRC_DIST + R) + CIRC_DIST + OFFSET_X + R - 0.5 * sprite.width,
-        (SIZE_Y - 140))
-    sprite.draw()
+    arrow_sprite.scale = 0.2
+    arrow_sprite.position = (
+        position * 2 * (CIRC_DIST + R) + CIRC_DIST + OFFSET_X + R - 0.5 * arrow_sprite.width,
+        (SIZE_Y - 140)
+    )
+    arrow_sprite.draw()
+
+    logo_sprite.scale = 0.3
+    logo_sprite.position = (SIZE_X // 2, SIZE_Y - TOP_DISTANCE // 2)
+    logo_sprite.draw()
 
 
 def draw_win(winner: int):
@@ -342,10 +348,10 @@ is_quantum_move, second_quantum_move = False, False
 
 TOP_DISTANCE = 160  # distance from the field to the top of the window
 if platform.system() == 'Windows':
-    SIZE_X = int(1280 * 0.5)  # x size of the window
+    SIZE_X = 1280 // 2  # x size of the window
 else:
-    SIZE_X = int(1280)  # x size of the window
-SIZE_Y = int(SIZE_X * HEIGHT / WIDTH) + TOP_DISTANCE  # y size of the window
+    SIZE_X = 1280  # x size of the window
+SIZE_Y = SIZE_X * HEIGHT // WIDTH + TOP_DISTANCE  # y size of the window
 OFFSET_X = 20  # x margin of the field
 OFFSET_Y = 20  # y margin of the field
 CIRC_DIST = 8  # distance between two circles
@@ -358,8 +364,11 @@ rectangle = pg.shapes.Rectangle(OFFSET_X, OFFSET_Y, width=int(SIZE_X - 2 * OFFSE
                                 height=int((SIZE_X - 2 * OFFSET_X) * HEIGHT / WIDTH), color=(230, 230, 230),
                                 batch=batch)
 arrow = pg.image.load('arrow.png')
-sprite = pg.sprite.Sprite(img=arrow)
-sprite.scale = 0.2
+arrow_sprite = pg.sprite.Sprite(img=arrow)
+logo = pg.image.load('logo.jpg')
+logo.anchor_x = logo.width // 2
+logo.anchor_y = logo.height // 2
+logo_sprite = pg.sprite.Sprite(img=logo)
 
 draw_board()
 
