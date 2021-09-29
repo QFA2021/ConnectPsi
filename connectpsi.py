@@ -348,10 +348,10 @@ quantum_list = []  # list of quantum pieces
 is_quantum_move, second_quantum_move = False, False
 
 TOP_DISTANCE = 160  # distance from the field to the top of the window
-if platform.system() == 'Windows':
-    SIZE_X = 1280 // 2  # x size of the window
-else:
+if platform.system() == 'Linux':
     SIZE_X = 1280  # x size of the window
+else:
+    SIZE_X = 1280 // 2  # x size of the window
 SIZE_Y = SIZE_X * HEIGHT // WIDTH + TOP_DISTANCE  # y size of the window
 OFFSET_X = 20  # x margin of the field
 OFFSET_Y = 20  # y margin of the field
