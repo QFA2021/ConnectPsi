@@ -364,9 +364,9 @@ batch = pg.graphics.Batch()
 rectangle = pg.shapes.Rectangle(OFFSET_X, OFFSET_Y, width=int(SIZE_X - 2 * OFFSET_X),
                                 height=int((SIZE_X - 2 * OFFSET_X) * HEIGHT / WIDTH), color=(230, 230, 230),
                                 batch=batch)
-arrow = pg.image.load('arrow.png')
+arrow = pg.image.load('graphics/arrow.png')
 arrow_sprite = pg.sprite.Sprite(img=arrow)
-logo = pg.image.load('logo.jpg')
+logo = pg.image.load('graphics/logo.jpg')
 logo.anchor_x = logo.width // 2
 logo.anchor_y = logo.height // 2
 logo_sprite = pg.sprite.Sprite(img=logo)
