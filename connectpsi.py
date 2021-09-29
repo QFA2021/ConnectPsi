@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import random
+import platform
 
 import numpy as np
 import pyglet as pg
@@ -340,7 +341,10 @@ quantum_list = []  # list of quantum pieces
 is_quantum_move, second_quantum_move = False, False
 
 TOP_DISTANCE = 160  # distance from the field to the top of the window
-SIZE_X = int(1280 * 0.5)  # x size of the window
+if platform.system() == 'Windows':
+    SIZE_X = int(1280 * 0.5)  # x size of the window
+else:
+    SIZE_X = int(1280)  # x size of the window
 SIZE_Y = int(SIZE_X * HEIGHT / WIDTH) + TOP_DISTANCE  # y size of the window
 OFFSET_X = 20  # x margin of the field
 OFFSET_Y = 20  # y margin of the field
