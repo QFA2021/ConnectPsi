@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-import random
 import platform
+import random
+from configparser import ConfigParser
 
 import numpy as np
 import pyglet as pg
-from configparser import ConfigParser
 
 
 def read_config(file: str):
