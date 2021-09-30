@@ -307,11 +307,11 @@ def draw_board():
     for elem in labels:
         elem.draw()
 
-    logo_sprite.scale = 0.3 // FACTOR
+    logo_sprite.scale = 0.3 / FACTOR
     logo_sprite.position = (SIZE_X // 2 - CIRC_DIST, SIZE_Y - TOP_DISTANCE // 2)
     logo_sprite.draw()
 
-    arrow_sprite.scale = 0.2 // FACTOR
+    arrow_sprite.scale = 0.2 / FACTOR
     arrow_sprite.position = (
         position * 2 * (CIRC_DIST + R) + CIRC_DIST + OFFSET_X + R - 0.5 * arrow_sprite.width,
         (SIZE_Y - 140 // FACTOR)
