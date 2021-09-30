@@ -325,7 +325,7 @@ def draw_win(winner: int):
     """
     if winner == -2:
         tie_message = pg.text.Label('Tie!', font_size=60, bold=True, color=(0, 0, 0, 255),
-                                    x=SIZE_X // 2, y=SIZE_Y // 2, anchor_x='center',
+                                    x=SIZE_X // 2, y=SIZE_Y // 2 - R, anchor_x='center',
                                     anchor_y='center')
         tie_message.draw()
     else:
