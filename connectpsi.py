@@ -3,6 +3,7 @@
 import platform
 import random
 from configparser import ConfigParser
+import typing
 
 import numpy as np
 import pyglet as pg
@@ -216,7 +217,7 @@ def check_win() -> int:
 
 def check_field(
     winner: int, winturn: int, tempwinturn: int, player: int, counter: int, field: int
-) -> tuple[int, int, int, int, int]:
+) -> typing.Tuple[int, int, int, int, int]:
     """Checks field for relevant changes for the check_win method.
     :winner: current winner
     :winturn: current minimal number of turns to win
