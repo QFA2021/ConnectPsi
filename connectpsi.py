@@ -208,7 +208,7 @@ def check_win() -> int:
         counter = 0
         tempwinturn = -1
 
-    if 0 not in board and winner == -2:
+    if 0 not in board and winner == -1:
         return -2
 
     return winner if winner != 0 else PLAYER_NR
@@ -324,7 +324,7 @@ def draw_win(winner: int):
     :param winner: Player who has won the game
     """
     if winner == -2:
-        tie_message = pg.text.Label('Tie!', font_size=40, bold=True, color=(0, 0, 0, 255),
+        tie_message = pg.text.Label('Tie!', font_size=60, bold=True, color=(0, 0, 0, 255),
                                     x=SIZE_X // 2, y=SIZE_Y // 2, anchor_x='center',
                                     anchor_y='center')
         tie_message.draw()
