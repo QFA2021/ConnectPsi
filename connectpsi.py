@@ -290,15 +290,16 @@ def draw_board():
                                       anchor_x='center', anchor_y='center')
                 labels.append(label)
             circles.append(circle)
+    labelcolor = get_playercolor(turn_counter)
     text_turn = pg.text.Label('Turn: ' + str(turn_counter), font_size=50, bold=True,
                               x=int(SIZE_X - 6 * OFFSET_X - 50), y=int(rectangle.height + 7 * OFFSET_Y),
-                              anchor_x='center',
+                              anchor_x='center', color = (labelcolor[0], labelcolor[1], labelcolor[2], 255),
                               anchor_y='center')
     text_turn.draw()
 
     if is_quantum_move:
         label_qm = pg.text.Label('Q', font_size=50, bold=True, italic=True, x=3 * OFFSET_X,
-                                 y=int(rectangle.height + 7 * OFFSET_Y),
+                                 y=int(rectangle.height + 7 * OFFSET_Y), color = (labelcolor[0], labelcolor[1], labelcolor[2], 255),
                                  anchor_x='center', anchor_y='center')
         label_qm.draw()
     batch.draw()
