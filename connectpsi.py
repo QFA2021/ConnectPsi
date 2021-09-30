@@ -291,16 +291,16 @@ def draw_board():
                 labels.append(label)
             circles.append(circle)
     labelcolor = get_playercolor(turn_counter)
-    text_turn = pg.text.Label('Turn: ' + str(turn_counter), font_size=50, bold=True,
+    text_turn = pg.text.Label('Turn: ' + str(turn_counter), font_size=50 / FACTOR, bold=True,
                               x=int(SIZE_X - 6 * OFFSET_X - 50), y=int(rectangle.height + 7 * OFFSET_Y),
-                              anchor_x='center', color = (labelcolor[0], labelcolor[1], labelcolor[2], 255),
+                              anchor_x='center', color=(labelcolor[0], labelcolor[1], labelcolor[2], 255),
                               anchor_y='center')
     text_turn.draw()
 
     if is_quantum_move:
-        label_qm = pg.text.Label('Q', font_size=50, bold=True, italic=True, x=3 * OFFSET_X,
+        label_qm = pg.text.Label('Q', font_size=50 / FACTOR, bold=True, italic=True, x=3 * OFFSET_X,
                                  y=int(rectangle.height + 7 * OFFSET_Y),
-                                 color=(labelcolor[0], labelcolor[1],labelcolor[2], 255),
+                                 color=(labelcolor[0], labelcolor[1], labelcolor[2], 255),
                                  anchor_x='center', anchor_y='center')
         label_qm.draw()
     batch.draw()
@@ -349,11 +349,11 @@ board = np.zeros((HEIGHT, WIDTH), dtype="int16")
 quantum_list = []  # list of quantum pieces
 is_quantum_move, second_quantum_move = False, False
 
-TOP_DISTANCE = 160  # distance from the field to the top of the window
 if platform.system() == 'Linux':
     FACTOR = 1
 else:
     FACTOR = 2
+TOP_DISTANCE = 160 // FACTOR  # distance from the field to the top of the window
 SIZE_X = 1280 // FACTOR  # x size of the window
 SIZE_Y = SIZE_X * HEIGHT // WIDTH + TOP_DISTANCE  # y size of the window
 OFFSET_X = 20 // FACTOR  # x margin of the field
