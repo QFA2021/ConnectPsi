@@ -356,7 +356,7 @@ def draw_win(winner: int):
             bold=True,
             color=(0, 0, 0, 255),
             x=SIZE_X // 2,
-            y=SIZE_Y // 2,
+            y=SIZE_Y // 2 - R,
             anchor_x="center",
             anchor_y="center",
         )
