@@ -15,11 +15,11 @@ def read_config(file: str):
     global WIDTH, HEIGHT, PLAYER_NR, PSI
     conf = ConfigParser()
     conf.read(file)
-    if conf['DEFAULT']:
-        WIDTH = conf['DEFAULT'].getint('width', 7)
-        HEIGHT = conf['DEFAULT'].getint('height', 6)
-        PLAYER_NR = conf['DEFAULT'].getint('player_nr', 2)
-        PSI = conf['DEFAULT'].getint('psi', 4)
+    if conf["DEFAULT"]:
+        WIDTH = conf["DEFAULT"].getint("width", 7)
+        HEIGHT = conf["DEFAULT"].getint("height", 6)
+        PLAYER_NR = conf["DEFAULT"].getint("player_nr", 2)
+        PSI = conf["DEFAULT"].getint("psi", 4)
     else:
         print("Config file not found.")
 
@@ -130,7 +130,7 @@ def check_win() -> int:
     """
     winner = -1
     winturn = (
-            2 * WIDTH * HEIGHT
+        2 * WIDTH * HEIGHT
     )  # a number sufficiently big, that the real winturn is smaller for sure
     tempwinturn = -1
     player = -1
@@ -215,7 +215,7 @@ def check_win() -> int:
 
 
 def check_field(
-        winner: int, winturn: int, tempwinturn: int, player: int, counter: int, field: int
+    winner: int, winturn: int, tempwinturn: int, player: int, counter: int, field: int
 ) -> tuple[int, int, int, int, int]:
     """Checks field for relevant changes for the check_win method.
     :winner: current winner
@@ -270,38 +270,60 @@ def get_playercolor(d):
 
 
 def draw_board():
-    """Draws all of the pieces and their labels as well as the arrow.
-    """
+    """Draws all of the pieces and their labels as well as the arrow."""
     circles = []
     labels = []
 
     for i in range(HEIGHT):
         for j in range(WIDTH):
             c = get_playercolor(board[i, j])
-            circle = pg.shapes.Circle(OFFSET_X + (CIRC_DIST + R) * (2 * j + 1),
-                                      2 * (HEIGHT - i) * (CIRC_DIST + R) - R + CIRC_DIST,
-                                      R, color=c, batch=batch)
+            circle = pg.shapes.Circle(
+                OFFSET_X + (CIRC_DIST + R) * (2 * j + 1),
+                2 * (HEIGHT - i) * (CIRC_DIST + R) - R + CIRC_DIST,
+                R,
+                color=c,
+                batch=batch,
+            )
             if board[i, j] in quantum_list:
                 circle.opacity = 80
             if board[i, j] != 0:
-                label = pg.text.Label(str(board[i, j]), font_size=int(0.4 * R), bold=True, color=(25, 25, 25, 255),
-                                      x=OFFSET_X + (CIRC_DIST + R) * (2 * j + 1),
-                                      y=2 * (HEIGHT - i) * (CIRC_DIST + R) - R + CIRC_DIST,
-                                      anchor_x='center', anchor_y='center')
+                label = pg.text.Label(
+                    str(board[i, j]),
+                    font_size=int(0.4 * R),
+                    bold=True,
+                    color=(25, 25, 25, 255),
+                    x=OFFSET_X + (CIRC_DIST + R) * (2 * j + 1),
+                    y=2 * (HEIGHT - i) * (CIRC_DIST + R) - R + CIRC_DIST,
+                    anchor_x="center",
+                    anchor_y="center",
+                )
                 labels.append(label)
             circles.append(circle)
     labelcolor = get_playercolor(turn_counter)
-    text_turn = pg.text.Label('Turn: ' + str(turn_counter), font_size=50 / FACTOR, bold=True,
-                              x=int(SIZE_X - 6 * OFFSET_X - 50), y=int(rectangle.height + 7 * OFFSET_Y),
-                              anchor_x='center', color=(labelcolor[0], labelcolor[1], labelcolor[2], 255),
-                              anchor_y='center')
+    text_turn = pg.text.Label(
+        "Turn: " + str(turn_counter),
+        font_size=50 / FACTOR,
+        bold=True,
+        x=int(SIZE_X - 6 * OFFSET_X - 50),
+        y=int(rectangle.height + 7 * OFFSET_Y),
+        anchor_x="center",
+        color=(labelcolor[0], labelcolor[1], labelcolor[2], 255),
+        anchor_y="center",
+    )
     text_turn.draw()
 
     if is_quantum_move:
-        label_qm = pg.text.Label('Q', font_size=50 / FACTOR, bold=True, italic=True, x=3 * OFFSET_X,
-                                 y=int(rectangle.height + 7 * OFFSET_Y),
-                                 color=(labelcolor[0], labelcolor[1], labelcolor[2], 255),
-                                 anchor_x='center', anchor_y='center')
+        label_qm = pg.text.Label(
+            "Q",
+            font_size=50 / FACTOR,
+            bold=True,
+            italic=True,
+            x=3 * OFFSET_X,
+            y=int(rectangle.height + 7 * OFFSET_Y),
+            color=(labelcolor[0], labelcolor[1], labelcolor[2], 255),
+            anchor_x="center",
+            anchor_y="center",
+        )
         label_qm.draw()
     batch.draw()
     for elem in labels:
@@ -313,8 +335,12 @@ def draw_board():
 
     arrow_sprite.scale = 0.2 / FACTOR
     arrow_sprite.position = (
-        position * 2 * (CIRC_DIST + R) + CIRC_DIST + OFFSET_X + R - 0.5 * arrow_sprite.width,
-        (SIZE_Y - 140 // FACTOR)
+        position * 2 * (CIRC_DIST + R)
+        + CIRC_DIST
+        + OFFSET_X
+        + R
+        - 0.5 * arrow_sprite.width,
+        (SIZE_Y - 140 // FACTOR),
     )
     arrow_sprite.draw()
 
@@ -324,15 +350,28 @@ def draw_win(winner: int):
     :param winner: Player who has won the game
     """
     if winner == -2:
-        tie_message = pg.text.Label('Tie!', font_size=60, bold=True, color=(0, 0, 0, 255),
-                                    x=SIZE_X // 2, y=SIZE_Y // 2, anchor_x='center',
-                                    anchor_y='center')
+        tie_message = pg.text.Label(
+            "Tie!",
+            font_size=60,
+            bold=True,
+            color=(0, 0, 0, 255),
+            x=SIZE_X // 2,
+            y=SIZE_Y // 2,
+            anchor_x="center",
+            anchor_y="center",
+        )
         tie_message.draw()
     else:
-        win_message = pg.text.Label('Player ' + str(winner) + ' has won!', font_size=40, bold=True,
-                                    color=(0, 0, 0, 255),
-                                    x=SIZE_X // 2, y=SIZE_Y // 2, anchor_x='center',
-                                    anchor_y='center')
+        win_message = pg.text.Label(
+            "Player " + str(winner) + " has won!",
+            font_size=40,
+            bold=True,
+            color=(0, 0, 0, 255),
+            x=SIZE_X // 2,
+            y=SIZE_Y // 2,
+            anchor_x="center",
+            anchor_y="center",
+        )
         win_message.draw()
 
 
@@ -349,7 +388,7 @@ board = np.zeros((HEIGHT, WIDTH), dtype="int16")
 quantum_list = []  # list of quantum pieces
 is_quantum_move, second_quantum_move = False, False
 
-if platform.system() == 'Linux':
+if platform.system() == "Linux":
     FACTOR = 1
 else:
     FACTOR = 2
@@ -364,12 +403,17 @@ position = 0  # column of a piece
 
 window = pg.window.Window(SIZE_X, SIZE_Y)
 batch = pg.graphics.Batch()
-rectangle = pg.shapes.Rectangle(OFFSET_X, OFFSET_Y, width=int(SIZE_X - 2 * OFFSET_X),
-                                height=int((SIZE_X - 2 * OFFSET_X) * HEIGHT / WIDTH), color=(230, 230, 230),
-                                batch=batch)
-arrow = pg.image.load('graphics/arrow.png')
+rectangle = pg.shapes.Rectangle(
+    OFFSET_X,
+    OFFSET_Y,
+    width=int(SIZE_X - 2 * OFFSET_X),
+    height=int((SIZE_X - 2 * OFFSET_X) * HEIGHT / WIDTH),
+    color=(230, 230, 230),
+    batch=batch,
+)
+arrow = pg.image.load("graphics/arrow.png")
 arrow_sprite = pg.sprite.Sprite(img=arrow)
-logo = pg.image.load('graphics/logo.jpg')
+logo = pg.image.load("graphics/logo.jpg")
 logo.anchor_x = logo.width // 2
 logo.anchor_y = logo.height // 2
 logo_sprite = pg.sprite.Sprite(img=logo)
@@ -391,10 +435,18 @@ def on_key_press(symbol, modifiers):
         if second_quantum_move:
             if symbol == pg.window.key.LEFT:
                 position = (position - 1) % WIDTH
-                arrow.x = position * (rectangle.width // WIDTH) + rectangle.width // (WIDTH * 2) + OFFSET_X
+                arrow.x = (
+                    position * (rectangle.width // WIDTH)
+                    + rectangle.width // (WIDTH * 2)
+                    + OFFSET_X
+                )
             elif symbol == pg.window.key.RIGHT:
                 position = (position + 1) % WIDTH
-                arrow.x = position * (rectangle.width // WIDTH) + rectangle.width // (WIDTH * 2) + OFFSET_X
+                arrow.x = (
+                    position * (rectangle.width // WIDTH)
+                    + rectangle.width // (WIDTH * 2)
+                    + OFFSET_X
+                )
             elif symbol == pg.window.key.ENTER and create_quantum_piece(position):
                 second_quantum_move = False
                 turn_counter += 1
@@ -407,10 +459,18 @@ def on_key_press(symbol, modifiers):
                 is_quantum_move = not is_quantum_move
             elif symbol == pg.window.key.LEFT:
                 position = (position - 1) % WIDTH
-                arrow.x = position * (rectangle.width // WIDTH) + rectangle.width // (WIDTH * 2) + OFFSET_X
+                arrow.x = (
+                    position * (rectangle.width // WIDTH)
+                    + rectangle.width // (WIDTH * 2)
+                    + OFFSET_X
+                )
             elif symbol == pg.window.key.RIGHT:
                 position = (position + 1) % WIDTH
-                arrow.x = position * (rectangle.width // WIDTH) + rectangle.width // (WIDTH * 2) + OFFSET_X
+                arrow.x = (
+                    position * (rectangle.width // WIDTH)
+                    + rectangle.width // (WIDTH * 2)
+                    + OFFSET_X
+                )
             elif symbol == pg.window.key.ENTER:
                 if is_quantum_move and create_quantum_piece(position):
                     gravity_column(position)
