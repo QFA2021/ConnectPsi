@@ -299,21 +299,22 @@ def draw_board():
 
     if is_quantum_move:
         label_qm = pg.text.Label('Q', font_size=50, bold=True, italic=True, x=3 * OFFSET_X,
-                                 y=int(rectangle.height + 7 * OFFSET_Y), color = (labelcolor[0], labelcolor[1], labelcolor[2], 255),
+                                 y=int(rectangle.height + 7 * OFFSET_Y),
+                                 color=(labelcolor[0], labelcolor[1],labelcolor[2], 255),
                                  anchor_x='center', anchor_y='center')
         label_qm.draw()
     batch.draw()
     for elem in labels:
         elem.draw()
 
-    logo_sprite.scale = 0.3
+    logo_sprite.scale = 0.3 // FACTOR
     logo_sprite.position = (SIZE_X // 2 - CIRC_DIST, SIZE_Y - TOP_DISTANCE // 2)
     logo_sprite.draw()
 
-    arrow_sprite.scale = 0.2
+    arrow_sprite.scale = 0.2 // FACTOR
     arrow_sprite.position = (
         position * 2 * (CIRC_DIST + R) + CIRC_DIST + OFFSET_X + R - 0.5 * arrow_sprite.width,
-        (SIZE_Y - 140)
+        (SIZE_Y - 140 // FACTOR)
     )
     arrow_sprite.draw()
 
@@ -350,13 +351,14 @@ is_quantum_move, second_quantum_move = False, False
 
 TOP_DISTANCE = 160  # distance from the field to the top of the window
 if platform.system() == 'Linux':
-    SIZE_X = 1280  # x size of the window
+    FACTOR = 1
 else:
-    SIZE_X = 1280 // 2  # x size of the window
+    FACTOR = 2
+SIZE_X = 1280 // FACTOR  # x size of the window
 SIZE_Y = SIZE_X * HEIGHT // WIDTH + TOP_DISTANCE  # y size of the window
-OFFSET_X = 20  # x margin of the field
-OFFSET_Y = 20  # y margin of the field
-CIRC_DIST = 8  # distance between two circles
+OFFSET_X = 20 // FACTOR  # x margin of the field
+OFFSET_Y = 20 // FACTOR  # y margin of the field
+CIRC_DIST = 8 // FACTOR  # distance between two circles
 R = (SIZE_X - 2 * OFFSET_X) / (2 * WIDTH) - CIRC_DIST  # radius of the circles
 position = 0  # column of a piece
 
