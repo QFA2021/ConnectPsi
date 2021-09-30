@@ -425,7 +425,7 @@ draw_board()
 def on_key_press(symbol, modifiers):
     global board, quantum_list, position, is_quantum_move, second_quantum_move, turn_counter, won
     if won != -1:
-        if symbol == pg.window.key.ENTER:
+        if symbol == pg.window.key.ENTER or symbol == pg.window.key.SPACE:
             won = -1
             turn_counter = 1
             board = np.zeros((HEIGHT, WIDTH), dtype="int16")
@@ -447,7 +447,9 @@ def on_key_press(symbol, modifiers):
                     + rectangle.width // (WIDTH * 2)
                     + OFFSET_X
                 )
-            elif symbol == pg.window.key.ENTER and create_quantum_piece(position):
+            elif (
+                symbol == pg.window.key.ENTER or symbol == pg.window.key.SPACE
+            ) and create_quantum_piece(position):
                 second_quantum_move = False
                 turn_counter += 1
                 gravity_column(position)
@@ -471,7 +473,7 @@ def on_key_press(symbol, modifiers):
                     + rectangle.width // (WIDTH * 2)
                     + OFFSET_X
                 )
-            elif symbol == pg.window.key.ENTER:
+            elif symbol == pg.window.key.ENTER or symbol == pg.window.key.SPACE:
                 if is_quantum_move and create_quantum_piece(position):
                     gravity_column(position)
                     second_quantum_move = True
